@@ -1,15 +1,11 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:jsdd_deliveryboy/screen/calendar.dart';
+import 'package:toast/toast.dart';
 
 import '../classes.dart';
+import 'calendar.dart';
 
 final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 final CollectionReference societyReference =
@@ -33,6 +29,8 @@ class _UserDetailState extends State<UserDetail> {
   List<SUser> users = [];
 
   _UserDetailState({required this.society, required this.societies});
+
+  String? ChangedSocietyName;
 
   @override
   void initState() {
@@ -59,211 +57,235 @@ class _UserDetailState extends State<UserDetail> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    ScreenUtil.init(
-        BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height),
-        designSize: Size(300, 800),
-        orientation: Orientation.portrait);
+  Widget build(BuildContext mainContext) {
     return Scaffold(
-        body: SafeArea(
-            child: Stack(
-      children: [
-        Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [
-                Color(0xFF02B3E8),
-                Color(0xFF1A55B3),
-              ],
-              begin: FractionalOffset(0.0, 0.0),
-              end: FractionalOffset(1.0, 0.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            ),
-          ),
-          child: Column(children: [
+      body: SafeArea(
+        child: Stack(
+          children: [
             Container(
-              height: MediaQuery.of(context).size.height / 8,
-              width: MediaQuery.of(context).size.width,
-              child: Stack(
-                children: [
-                  InkWell(
+              height: double.infinity,
+              width: double.infinity,
+              // color: const Color.fromRGBO(0, 182, 233, 0.9),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF02B3E8),
+                    Color(0xFF1A55B3),
+                  ],
+                  begin: FractionalOffset(0.0, 0.0),
+                  end: FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              height: MediaQuery.of(context).size.height * 0.1,
+              width: double.infinity,
+              child: Stack(children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: InkWell(
                     onTap: () {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      margin: EdgeInsets.only(top: 31.0.h, left: 15.0.w),
-                      height: 45.0.h,
-                      width: 45.0.w,
-                      child: Image.asset("images/back.png"),
-                    ),
+                        height: 45.0,
+                        width: 45.0,
+                        child: Image.asset("images/back.png")),
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Row(
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        Text("Society 1",
-                            style: GoogleFonts.roboto(
-                                fontSize: 20.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400)),
-                        SizedBox(width: 10.0),
-                        Icon(
-                          Icons.edit,
-                          color: Colors.white,
+                        Text(
+                          society.name,
+                          style: GoogleFonts.roboto(
+                              textStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25.0,
+                                  fontWeight: FontWeight.w300)),
+                        )
+                      ]),
+                ),
+              ]),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.1 + 10.0),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25)),
+                color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.only(left: 20.0, top: 20.0),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Users",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 5.0),
+                                  child: Text(
+                                    "Total Number of user: ${users.length}",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(fontSize: 18.0),
+                                  ),
+                                ),
+                              ]),
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: ListView.builder(
+                        itemCount: users.length,
+                        scrollDirection: Axis.vertical,
+                        // shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int index) {
+                          SUser user = users[index];
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(mainContext).push(
+                                  new MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Calendar(
+                                            user: user,
+                                            society: society,
+                                          )));
+                            },
+                            child: Row(children: [
+                              Expanded(
+                                child: Card(
+                                  elevation: 5.0,
+                                  margin: EdgeInsets.all(10),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(15.0)),
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                        top: 25.0,
+                                        bottom: 25.0,
+                                        left: 15.0,
+                                        right: 15.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        gradient: (index % 2 == 0)
+                                            ? const LinearGradient(
+                                                colors: [
+                                                  const Color(0xFF02B3E8),
+                                                  const Color(0xFF1A55B3),
+                                                ],
+                                                begin: const FractionalOffset(
+                                                    0.0, 0.0),
+                                                end: const FractionalOffset(
+                                                    1.0, 0.0),
+                                                stops: [0.0, 1.0],
+                                                tileMode: TileMode.clamp,
+                                              )
+                                            : const LinearGradient(
+                                                colors: [
+                                                  Color(0XFFFFFFFF),
+                                                  Color(0xFFFFFFFF)
+                                                ],
+                                                begin:
+                                                    FractionalOffset(0.0, 0.0),
+                                                end: FractionalOffset(1.0, 0.0),
+                                                stops: [0.0, 1.0],
+                                                tileMode: TileMode.clamp)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          user.Name,
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            color: (index % 2 == 0)
+                                                ? Colors.white
+                                                : Color.fromRGBO(
+                                                    2, 179, 232, 1),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ]),
+                          );
+                        },
+                      ),
                     ),
                   )
                 ],
               ),
             ),
-            Expanded(
-                child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25)),
-                      color: Colors.white,
-                    ),
-                    child: Column(children: [
-                      Expanded(
-                        child: Container(
-                          color: Colors.white60,
-                          margin: EdgeInsets.only(top: 20.0.h, bottom: 10.0.h),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20.0),
-                                  child: Text(
-                                    "Users",
-                                    textAlign: TextAlign.left,
-                                    // style: TextStyle(
-                                    //   fontSize: 27.0,
-                                    //   color: Color.fromRGBO(0, 182, 233, 1),
-                                    //   fontWeight: FontWeight.bold,
-                                    //),
-                                    style: GoogleFonts.roboto(
-                                        color: Colors.black,
-                                        fontSize: 27.0,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ),
-                                SizedBox(height: 10.0),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 20.0, bottom: 10.0),
-                                  child: Text(
-                                    "Total Number of user: 10",
-                                    textAlign: TextAlign.left,
-                                    // style: TextStyle(
-                                    //   fontSize: 18.0,
-                                    //   // color: Color.fromRGBO(0, 182, 233, 1),
-                                    // ),
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: users.length,
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      SUser user = users[index];
-                                      return InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) => Calendar()));
-                                        },
-                                        child: Card(
-                                          margin: EdgeInsets.only(
-                                              top: 15.0.h,
-                                              bottom: 12.0.h,
-                                              left: 17.0.w,
-                                              right: 17.0.w),
-                                          elevation: 10.0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          child: Container(
-                                            height: 75.0,
-                                            decoration: BoxDecoration(
-                                              gradient: (index % 2 == 0)
-                                                  ? const LinearGradient(
-                                                      colors: [
-                                                        Color(0xFF02B3E8),
-                                                        Color(0xFF1A55B3),
-                                                      ],
-                                                      begin: FractionalOffset(
-                                                          0.0, 0.0),
-                                                      end: FractionalOffset(
-                                                          1.0, 0.0),
-                                                      stops: [0.0, 1.0],
-                                                      tileMode: TileMode.clamp,
-                                                    )
-                                                  : const LinearGradient(
-                                                      colors: [
-                                                        Color(0XFFFFFFFF),
-                                                        Color(0xFFFFFFFF)
-                                                      ],
-                                                      begin: FractionalOffset(
-                                                          0.0, 0.0),
-                                                      end: FractionalOffset(
-                                                          1.0, 0.0),
-                                                      stops: [0.0, 1.0],
-                                                      tileMode: TileMode.clamp),
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            child: Container(
-                                                margin: EdgeInsets.only(
-                                                    left: 15.0.w, top: 28.0.h),
-                                                child: Text(
-                                                  user.Name,
-                                                  // style: TextStyle(
-                                                  //     color: (index % 2 == 0)
-                                                  //         ? Colors.white
-                                                  //         : Color.fromRGBO(
-                                                  //             0, 182, 233, 1),
-                                                  //     fontSize: 21.0,
-                                                  //     fontWeight:
-                                                  //         FontWeight.w500),
-                                                  style: GoogleFonts.roboto(
-                                                    color: (index % 2 == 0)
-                                                        ? Colors.white
-                                                        : Color.fromRGBO(
-                                                            0, 182, 233, 1),
-                                                    fontSize: 22.0.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                )),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              ]),
-                        ),
-                      )
-                    ])))
-          ]),
-        )
+          ],
+        ),
+      ),
+    );
+  }
+
+  showAlertDialog(BuildContext context, SUser user, int index) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () async {
+        await societyReference
+            .doc(society.d_id)
+            .collection("Users")
+            .doc(user.d_id)
+            .delete()
+            .then((_) {
+          FirebaseFirestore.instance
+              .collection("users")
+              .doc(user.Phone)
+              .delete()
+              .then((value) {
+            Toast.show("DELETED", context, gravity: Toast.BOTTOM);
+            Navigator.of(context).pop();
+          });
+        });
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete User?"),
+      content: Text("Deleting User Will Delete All Of It's Data."),
+      actions: [
+        okButton,
       ],
-    )));
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

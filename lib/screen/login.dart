@@ -16,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   String? phoneno = null;
   TextEditingController _controller = TextEditingController();
 
@@ -92,15 +91,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     margin: const EdgeInsets.only(
                         top: 15.0, left: 15.0, right: 15.0),
                     child: TextFormField(
-                      // ignore: prefer_const_constructors
+                      keyboardType: TextInputType.number,
+                      maxLength: 10,
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
                       decoration: InputDecoration(
-                        hintText: "7096xxxxxx",
+                        counter: Offstage(),
+
+                        hintText: "7096******",
                         focusedBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.circular(10.0)),
                         hintStyle: const TextStyle(
-                            color: Colors.white, fontSize: 20.0),
+                            color: Colors.white60, fontSize: 20.0),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide:
@@ -170,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         MaterialPageRoute(
             builder: (_) => OTP(
-              phone: _controller.text,
-            )));
+                  phone: _controller.text,
+                )));
   }
 }

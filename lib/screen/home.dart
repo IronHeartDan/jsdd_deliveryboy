@@ -23,6 +23,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late String uid;
+
   List<Society> societies = [];
   List<Society> searchedSocieties = [];
   final TextEditingController _searchController = new TextEditingController();
@@ -55,28 +57,32 @@ class _HomeState extends State<Home> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          elevation: 0.0,
-          title: const Text(
-            "JAN SHAKTI DUDH DEPO",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w400),
-          ),
-          centerTitle: true,
-          //  Scaffold.of(context).openDrawer();
-          leading: Builder(builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: InkWell(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return Container(
+                padding: EdgeInsets.all(18.0),
+                child: InkWell(
                   onTap: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  child: Image.asset("images/nav.png")),
-            );
-          }),
-          backgroundColor: Colors.white,
-          iconTheme: const IconThemeData(color: Colors.black),
+                  child: Image.asset(
+                    "images/nav.png",
+                  ),
+                ),
+              );
+            },
+          ),
+          title: Text(
+            "JAN SAKTI DUDH DEPO",
+            style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.w400),
+          ),
+          centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.black),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
         ),
         drawer: Container(
             // margin: EdgeInsets.only(top: 35.0.h, bottom: 10.0.h),
@@ -247,55 +253,45 @@ class _HomeState extends State<Home> {
         body: SafeArea(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            margin: EdgeInsets.only(left: 20.0.w, right: 20.0.w, top: 10.0.h),
-            height: 48.0,
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.0),
-                color: Colors.grey[300]),
-            child: TextFormField(
-              controller: _searchController,
-              onChanged: (value) {
-                if (value.length > 0) {
-                  if (!value.toLowerCase().contains("add")) {
-                    searchedSocieties = societies
-                        .where((element) => element.name
-                            .toLowerCase()
-                            .contains(value.toLowerCase()))
-                        .toList();
+                  Container(
+                    margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
+                    height: 45.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.0),
+                        color: Colors.grey[300]),
+                    child: TextFormField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        if (value.length > 0) {
+                          if (!value.toLowerCase().contains("add")) {
+                            searchedSocieties = societies
+                                .where((element) => element.name
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                                .toList();
 
-                    setState(() {});
-                  } else {
-                    searchedSocieties = [];
-                  }
-                } else {
-                  searchedSocieties = [];
+                            setState(() {});
+                          } else {
+                            searchedSocieties = [];
+                          }
+                        } else {
+                          searchedSocieties = [];
 
-                  setState(() {});
-                }
-              },
-              decoration: InputDecoration(
-                hintText: "Search",
-                hintStyle: TextStyle(color: Colors.black),
-                contentPadding:
-                    EdgeInsets.only(left: 15.0, top: 15.0, bottom: 10.0),
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                suffixIcon: Card(
-                  elevation: 30.0,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.search),
+                          setState(() {});
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Search",
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 12.0, horizontal: 12.0),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(70.0)),
-                ),
-              ),
-            ),
-          ),
           const SizedBox(
             height: 20.0,
           ),
