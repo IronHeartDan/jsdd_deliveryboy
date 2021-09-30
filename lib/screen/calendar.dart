@@ -160,12 +160,12 @@ class _CalendarState extends State<Calendar>
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.account_circle,
                         color: Colors.white,
                         size: 35,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(
@@ -183,7 +183,7 @@ class _CalendarState extends State<Calendar>
           Container(
             margin: EdgeInsets.only(
                 top: MediaQuery.of(context).size.height * 0.12 + 10.0),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(25), topRight: Radius.circular(25)),
               color: Colors.white,

@@ -6,9 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jsdd_deliveryboy/screen/t_c.dart';
 import 'package:jsdd_deliveryboy/screen/userdetail.dart';
 
 import '../classes.dart';
+import 'about_us.dart';
+import 'faq.dart';
 import 'login.dart';
 
 final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -181,26 +184,44 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 30.0,
                 ),
-                const ListTile(
-                  leading: Icon(
-                    Icons.admin_panel_settings,
-                    color: Colors.white,
-                    size: 35.0,
+                ListTile(
+                  onTap: () => Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => AboutUs())),
+                  title: Text(
+                    "About us",
+                    style: GoogleFonts.roboto(
+                        textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w400)),
                   ),
-                  title: Text("T&C",
-                      style: TextStyle(color: Colors.white, fontSize: 20.0)),
                 ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                const ListTile(
-                  leading: Icon(
-                    Icons.delivery_dining,
-                    color: Colors.white,
-                    size: 35.0,
+                ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => FAQ()));
+                  },
+                  title: Text(
+                    "FAQ's",
+                    style: GoogleFonts.roboto(
+                        textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w400)),
                   ),
-                  title: Text("F&Q",
-                      style: TextStyle(color: Colors.white, fontSize: 20.0)),
+                ),
+                ListTile(
+                  onTap: () => Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => TC())),
+                  title: Text(
+                    "T & C",
+                    // style: TextStyle(color: Colors.white, fontSize: 18.0),
+                    style: GoogleFonts.roboto(
+                        textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w400)),
+                  ),
                 ),
                 const SizedBox(
                   height: 70.0,
